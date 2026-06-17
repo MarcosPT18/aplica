@@ -375,8 +375,8 @@
     try {
       const res = await fetch(FORMSPREE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: { 'Accept': 'application/json' },
+        body: new URLSearchParams(Object.entries(payload))
       });
 
       document.getElementById('sendingOverlay').classList.remove('active');
