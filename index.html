@@ -346,7 +346,7 @@
     `;
   }
 
-  async function submitForm() {
+  function submitForm() {
     const btn = document.getElementById('btnEnviar');
     btn.disabled = true;
     document.getElementById('sendingOverlay').classList.add('active');
@@ -373,28 +373,28 @@
     };
 
     try {
-      const res = await fetch(FORMSPREE_URL, {
+      fetch(FORMSPREE_URL, {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
         body: new URLSearchParams(Object.entries(payload))
-      });
-
+  })
+    .then(r => {
       document.getElementById('sendingOverlay').classList.remove('active');
-
-      if (res.ok) {
+      if (r.ok) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('successBlock').style.display = 'block';
         document.getElementById('progress').style.width = '100%';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         btn.disabled = false;
-        alert('Hubo un error al enviar. Intenta de nuevo.');
+        alert('Error al enviar. Intenta de nuevo.');
       }
-    } catch (e) {
+    })
+    .catch(() => {
       document.getElementById('sendingOverlay').classList.remove('active');
       btn.disabled = false;
-      alert('Error de conexión. Verifica tu internet e intenta de nuevo.');
-    }
+      alert('Error de conexion. Verifica tu internet.');
+    });
   }
 </script>
 </body>
