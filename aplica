@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplica al coaching online 1:1 con Marcos González — ISSA Certified Personal Trainer & Nutrition Coach. Cupos limitados.">
+  <title>Aplicación — Coaching Online | Marcos González</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
+    .app-wrap { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+    .progress-bar { height: 3px; background: #1a1a1a; position: sticky; top: 0; z-index: 10; }
+    .progress-fill { height: 100%; background: #FF2A2A; transition: width 0.4s ease; }
+    .hero { padding: 48px 24px 36px; text-align: center; border-bottom: 1px solid #1a1a1a; }
+    .hero-badge { display: inline-block; background: #FF2A2A; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 2px; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 44px; font-weight: 400; line-height: 1.0; letter-spacing: 1px; color: #fff; margin-bottom: 16px; }
+    .hero h1 span { color: #FF2A2A; }
+    .hero p { font-size: 14px; color: #777; line-height: 1.7; max-width: 320px; margin: 0 auto 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 32px; }
+    .stat-num { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 28px; color: #FF2A2A; line-height: 1; }
+    .stat-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+    .form-section { padding: 0 24px; margin-top: 36px; }
+    .step-indicator { display: flex; align-items: center; margin-bottom: 32px; justify-content: center; }
+    .step-dot { width: 30px; height: 30px; border-radius: 50%; background: #1a1a1a; border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #444; font-weight: 700; transition: all 0.3s; flex-shrink: 0; }
+    .step-dot.active { background: #FF2A2A; border-color: #FF2A2A; color: #fff; }
+    .step-dot.done { background: #1a1a1a; border-color: #FF2A2A; color: #FF2A2A; }
+    .step-line { flex: 1; height: 1px; background: #1a1a1a; max-width: 48px; transition: background 0.3s; }
+    .step-line.done { background: #FF2A2A; }
+    .step-block { display: none; animation: fadeIn 0.3s ease; }
+    .step-block.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .step-title { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 26px; color: #fff; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .step-sub { font-size: 13px; color: #444; margin-bottom: 24px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 10px; }
+    .field input, .field textarea, .field select { width: 100%; background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #fff; font-size: 15px; font-family: 'Inter', sans-serif; padding: 14px 16px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+    .field input:focus, .field textarea:focus { border-color: #FF2A2A; }
+    .field input::placeholder, .field textarea::placeholder { color: #2a2a2a; }
+    .field textarea { resize: none; min-height: 100px; line-height: 1.6; }
+    .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+    .field select option { background: #111; color: #fff; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .option-btn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #777; font-size: 13px; font-family: 'Inter', sans-serif; padding: 14px 12px; text-align: left; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+    .option-btn:hover { border-color: #333; color: #bbb; }
+    .option-btn.selected { border-color: #FF2A2A; color: #fff; background: #180808; }
+    .opt-icon { display: block; font-size: 20px; margin-bottom: 6px; }
+    .yn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .yn-btn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #555; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .yn-btn:hover { border-color: #333; color: #999; }
+    .yn-btn.yes.selected { border-color: #FF2A2A; background: #180808; color: #fff; }
+    .yn-btn.no.selected { border-color: #2a2a2a; background: #111; color: #888; }
+    .invest-options { display: flex; flex-direction: column; gap: 10px; }
+    .invest-btn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #666; font-size: 14px; font-family: 'Inter', sans-serif; padding: 16px 18px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+    .invest-btn:hover { border-color: #333; }
+    .invest-btn.selected { border-color: #FF2A2A; background: #180808; color: #fff; }
+    .invest-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 2px; background: #1a1a1a; color: #333; flex-shrink: 0; }
+    .invest-btn.selected .invest-tag { background: #FF2A2A; color: #fff; }
+    .warning-box { background: #180808; border: 1px solid #3a1010; border-radius: 4px; padding: 14px 16px; font-size: 13px; color: #bb3333; line-height: 1.6; margin-top: 10px; display: none; }
+    .nav-row { display: flex; gap: 10px; margin-top: 32px; }
+    .btn-back { flex: 0 0 auto; background: transparent; border: 1px solid #1e1e1e; border-radius: 4px; color: #444; font-size: 14px; font-family: 'Inter', sans-serif; padding: 0 20px; height: 52px; cursor: pointer; transition: all 0.2s; }
+    .btn-back:hover { border-color: #333; color: #777; }
+    .btn-next { flex: 1; background: #FF2A2A; border: none; border-radius: 4px; color: #fff; font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif; padding: 0 24px; height: 52px; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s; }
+    .btn-next:hover { background: #dd2020; }
+    .btn-next:disabled { background: #3a1010; color: #7a3333; cursor: not-allowed; }
+    #resumen { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 18px; margin-bottom: 18px; font-size: 13px; color: #666; line-height: 2.2; }
+    .success-block { display: none; padding: 36px 24px 0; }
+    .success-top { text-align: center; margin-bottom: 32px; }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: #180808; border: 2px solid #FF2A2A; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 26px; }
+    .success-top h2 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 32px; color: #fff; margin-bottom: 10px; }
+    .success-top p { font-size: 14px; color: #555; line-height: 1.7; }
+    .calendly-cta-card { background: #111; border: 1px solid #2a0808; border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+    .cta-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #FF2A2A; font-weight: 700; margin-bottom: 10px; }
+    .cta-title { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 24px; color: #fff; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .cta-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 18px; }
+    .cta-bullets { list-style: none; margin-bottom: 22px; }
+    .cta-bullets li { font-size: 13px; color: #666; padding: 6px 0; display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px solid #1a1a1a; }
+    .cta-bullets li:last-child { border-bottom: none; }
+    .cta-bullets li::before { content: '→'; color: #FF2A2A; flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+    .btn-calendly { display: block; width: 100%; background: #FF2A2A; border: none; border-radius: 4px; color: #fff; font-size: 16px; font-weight: 700; font-family: 'Inter', sans-serif; padding: 18px 24px; text-align: center; cursor: pointer; letter-spacing: 0.5px; transition: background 0.2s; text-decoration: none; }
+    .btn-calendly:hover { background: #dd2020; }
+    .btn-calendly-sub { font-size: 11px; color: #444; text-align: center; margin-top: 10px; }
+    .next-steps { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 8px; padding: 20px; margin-top: 16px; }
+    .next-steps-title { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #333; margin-bottom: 16px; font-weight: 700; }
+    .next-step-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .next-step-item:last-child { margin-bottom: 0; }
+    .step-num-badge { width: 22px; height: 22px; border-radius: 50%; background: #1a1a1a; border: 1px solid #2a2a2a; color: #444; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .step-num-badge.done { border-color: #FF2A2A; color: #FF2A2A; }
+    .next-step-text strong { color: #888; display: block; font-size: 13px; margin-bottom: 2px; }
+    .next-step-text span { font-size: 12px; color: #444; }
+    .footer { text-align: center; padding: 40px 24px 0; font-size: 11px; color: #333; }
+    .footer a { color: #555; text-decoration: none; }
+    .footer a:hover { color: #FF2A2A; }
+    .sending-overlay { display: none; position: fixed; inset: 0; background: rgba(13,13,13,0.92); z-index: 100; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+    .sending-overlay.active { display: flex; }
+    .spinner { width: 36px; height: 36px; border: 2px solid #1a1a1a; border-top-color: #FF2A2A; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sending-text { font-size: 13px; color: #555; }
+  </style>
+</head>
+<body>
+
+<!-- SENDING OVERLAY -->
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="spinner"></div>
+  <div class="sending-text">Enviando tu aplicación...</div>
+</div>
+
+<div class="app-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width: 20%;"></div></div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Cupos limitados</div>
+    <h1>¿Listo para<br><span>transformarte?</span></h1>
+    <p>Este formulario es un filtro. Solo acepto clientes que estén comprometidos de verdad con su proceso.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">1:1</div><div class="stat-label">Coaching real</div></div>
+      <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Semanas</div></div>
+      <div class="stat"><div class="stat-num">ISSA</div><div class="stat-label">Certificado</div></div>
+    </div>
+  </div>
+
+  <!-- FORM (visual, controlled by JS) -->
+  <div class="form-section" id="formSection">
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">3</div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-dot" id="dot4">4</div>
+      <div class="step-line" id="line4"></div>
+      <div class="step-dot" id="dot5">5</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step-block active" id="step1">
+      <div class="step-title">Tu información</div>
+      <div class="step-sub">Para hacerte seguimiento personalizado</div>
+      <div class="field"><label>Nombre completo</label><input type="text" id="nombre" placeholder="Tu nombre"></div>
+      <div class="field"><label>Correo electrónico</label><input type="email" id="email" placeholder="tu@email.com"></div>
+      <div class="field"><label>Edad</label><input type="number" id="edad" placeholder="Ej: 28" min="16" max="65"></div>
+      <div class="field"><label>Altura y peso actual</label><input type="text" id="medidas" placeholder="Ej: 5'9 — 185 lb"></div>
+      <div class="nav-row"><button class="btn-next" onclick="goTo(2)">Continuar →</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-block" id="step2">
+      <div class="step-title">Tu objetivo</div>
+      <div class="step-sub">¿Qué quieres lograr?</div>
+      <div class="field">
+        <div class="options-grid">
+          <div class="option-btn" onclick="selectOption(this,'objetivo')"><span class="opt-icon">🔥</span>Perder grasa y definirme</div>
+          <div class="option-btn" onclick="selectOption(this,'objetivo')"><span class="opt-icon">💪</span>Ganar músculo y volumen</div>
+          <div class="option-btn" onclick="selectOption(this,'objetivo')"><span class="opt-icon">⚖️</span>Recomposición corporal</div>
+          <div class="option-btn" onclick="selectOption(this,'objetivo')"><span class="opt-icon">🏋️</span>Mejorar rendimiento</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:16px">
+        <label>¿Qué te ha impedido lograrlo hasta ahora?</label>
+        <textarea id="obstaculo" placeholder="Sé honesto — esto me ayuda a entender cómo puedo ayudarte mejor"></textarea>
+      </div>
+      <div class="nav-row"><button class="btn-back" onclick="goTo(1)">←</button><button class="btn-next" onclick="goTo(3)">Continuar →</button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-block" id="step3">
+      <div class="step-title">Tu situación actual</div>
+      <div class="step-sub">Necesito saber desde dónde empezamos</div>
+      <div class="field">
+        <label>¿Entrenas actualmente?</label>
+        <div class="options-grid">
+          <div class="option-btn" onclick="selectOption(this,'entrena')">Sí, con consistencia</div>
+          <div class="option-btn" onclick="selectOption(this,'entrena')">A veces, inconsistente</div>
+          <div class="option-btn" onclick="selectOption(this,'entrena')">Entrené antes, paré</div>
+          <div class="option-btn" onclick="selectOption(this,'entrena')">Nunca he entrenado</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:16px">
+        <label>¿Cuántos días por semana puedes entrenar?</label>
+        <select id="dias">
+          <option value="" disabled selected>Selecciona...</option>
+          <option>2 días</option><option>3 días</option><option>4 días</option><option>5 días</option><option>6 días</option>
+        </select>
+      </div>
+      <div class="nav-row"><button class="btn-back" onclick="goTo(2)">←</button><button class="btn-next" onclick="goTo(4)">Continuar →</button></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-block" id="step4">
+      <div class="step-title">Compromiso</div>
+      <div class="step-sub">Solo trabajo con personas serias</div>
+      <div class="field">
+        <label>¿Listo para seguir un plan estructurado 12+ semanas?</label>
+        <div class="yn-grid">
+          <div class="yn-btn yes" onclick="selectYN(this,true)">Sí, comprometido</div>
+          <div class="yn-btn no" onclick="selectYN(this,false)">Necesito pensarlo</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:20px">
+        <label>¿Puedes invertir en tu proceso físico mensualmente?</label>
+        <div class="invest-options">
+          <div class="invest-btn" onclick="selectInvest(this,'si')"><span>Sí, estoy listo para invertir</span><span class="invest-tag">✓</span></div>
+          <div class="invest-btn" onclick="selectInvest(this,'quizas')"><span>Depende del precio exacto</span><span class="invest-tag">?</span></div>
+          <div class="invest-btn" onclick="selectInvest(this,'no')"><span>Ahora mismo no puedo</span><span class="invest-tag">✕</span></div>
+        </div>
+        <div class="warning-box" id="invest-warning">Actualmente mis programas requieren una inversión mensual. Si esto cambia, con gusto te contacto. 🙏</div>
+      </div>
+      <div class="nav-row"><button class="btn-back" onclick="goTo(3)">←</button><button class="btn-next" onclick="goTo(5)">Ver resumen →</button></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-block" id="step5">
+      <div class="step-title">Confirma tu aplicación</div>
+      <div class="step-sub">Revisa todo antes de enviar</div>
+      <div id="resumen"></div>
+      <div class="field">
+        <label>¿Algo más que quieras que sepa?</label>
+        <textarea id="extra" placeholder="Opcional — cualquier contexto adicional"></textarea>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(4)">←</button>
+        <button class="btn-next" id="btnEnviar" onclick="submitForm()">Enviar aplicación ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-block" id="successBlock">
+    <div class="success-top">
+      <div class="success-icon">✓</div>
+      <h2>Aplicación recibida</h2>
+      <p>Tu perfil está en mis manos.<br>Si eres un buen fit, te contacto en 24–48h por Instagram.</p>
+    </div>
+
+    <div class="calendly-cta-card">
+      <div class="cta-label">Paso siguiente — recomendado</div>
+      <div class="cta-title">Agenda tu Discovery Call ahora</div>
+      <div class="cta-desc">No esperes a que te contacte. Los cupos se llenan rápido — asegura el tuyo antes.</div>
+      <ul class="cta-bullets">
+        <li>30 minutos, sin costo</li>
+        <li>Evaluamos tu situación actual juntos</li>
+        <li>Te digo si puedo ayudarte — sin rodeos</li>
+        <li>Si es el fit correcto, arrancamos esa semana</li>
+      </ul>
+      <a class="btn-calendly" href="https://calendly.com/kingkayzer01/30min" target="_blank" rel="noopener">Agendar Discovery Call →</a>
+      <div class="btn-calendly-sub">Zoom &nbsp;·&nbsp; 30 min &nbsp;·&nbsp; Gratis</div>
+    </div>
+
+    <div class="next-steps">
+      <div class="next-steps-title">Qué pasa después</div>
+      <div class="next-step-item">
+        <div class="step-num-badge done">✓</div>
+        <div class="next-step-text"><strong>Aplicación enviada</strong><span>Ya está en mis manos.</span></div>
+      </div>
+      <div class="next-step-item">
+        <div class="step-num-badge">2</div>
+        <div class="next-step-text"><strong>Reviso tu perfil</strong><span>En las próximas 24–48 horas.</span></div>
+      </div>
+      <div class="next-step-item">
+        <div class="step-num-badge">3</div>
+        <div class="next-step-text"><strong>Discovery Call</strong><span>30 min para diseñar tu plan juntos.</span></div>
+      </div>
+      <div class="next-step-item">
+        <div class="step-num-badge">4</div>
+        <div class="next-step-text"><strong>Arrancamos</strong><span>Plan listo, proceso activo.</span></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>@marcosglezpt &nbsp;·&nbsp; ISSA Certified Personal Trainer & Nutrition Coach<br>
+      <a href="https://www.instagram.com/marcosglezpt" target="_blank">Instagram</a> &nbsp;·&nbsp;
+      <a href="https://calendly.com/kingkayzer01/30min" target="_blank">Calendly</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── FORMSPREE ENDPOINT ───────────────────────────────────────────────────
+  // PASO 1: Ve a https://formspree.io → Sign up con glezmarcos18@gmail.com
+  // PASO 2: New Form → copia tu endpoint (ej: https://formspree.io/f/xyzabcde)
+  // PASO 3: Reemplaza la URL de abajo con la tuya
+  const FORMSPREE_URL = 'https://formspree.io/f/TU_FORM_ID_AQUI';
+  // ─────────────────────────────────────────────────────────────────────────
+
+  let investVal = '';
+  let semanasOk = null;
+
+  function goTo(n) {
+    document.querySelectorAll('.step-block').forEach(b => b.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+    document.getElementById('progress').style.width = (n * 20) + '%';
+    for (let i = 1; i <= 5; i++) {
+      const dot = document.getElementById('dot' + i);
+      if (i < n) { dot.className = 'step-dot done'; dot.textContent = '✓'; }
+      else if (i === n) { dot.className = 'step-dot active'; dot.textContent = i; }
+      else { dot.className = 'step-dot'; dot.textContent = i; }
+      if (i < 5) document.getElementById('line' + i).className = 'step-line' + (i < n ? ' done' : '');
+    }
+    if (n === 5) buildResumen();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectOption(el, group) {
+    el.closest('.field').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function selectYN(el, val) {
+    el.closest('.field').querySelectorAll('.yn-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    semanasOk = val;
+  }
+
+  function selectInvest(el, val) {
+    document.querySelectorAll('.invest-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    investVal = val;
+    document.getElementById('invest-warning').style.display = val === 'no' ? 'block' : 'none';
+  }
+
+  function buildResumen() {
+    const nombre = document.getElementById('nombre').value || '—';
+    const email  = document.getElementById('email').value  || '—';
+    const edad   = document.getElementById('edad').value   || '—';
+    const medidas = document.getElementById('medidas').value || '—';
+    const obj    = document.querySelector('[onclick*="objetivo"].selected');
+    const entrena = document.querySelector('[onclick*="entrena"].selected');
+    const dias   = document.getElementById('dias').value   || '—';
+    const invest = investVal === 'si' ? '✓ Listo' : investVal === 'quizas' ? 'Depende del precio' : '✕ No por ahora';
+    const semanas = semanasOk === true ? '✓ Comprometido' : semanasOk === false ? 'Necesita pensarlo' : '—';
+    const objText = obj ? obj.innerText.replace(/^[\S\s]{1,3}\s/, '').trim() : '—';
+
+    document.getElementById('resumen').innerHTML = `
+      <span style="color:#444">Nombre</span><span style="color:#ccc;float:right">${nombre}</span><br>
+      <span style="color:#444">Email</span><span style="color:#ccc;float:right">${email}</span><br>
+      <span style="color:#444">Edad</span><span style="color:#ccc;float:right">${edad} años</span><br>
+      <span style="color:#444">Medidas</span><span style="color:#ccc;float:right">${medidas}</span><br>
+      <span style="color:#444">Objetivo</span><span style="color:#ccc;float:right">${objText}</span><br>
+      <span style="color:#444">Entrena</span><span style="color:#ccc;float:right">${entrena ? entrena.innerText : '—'}</span><br>
+      <span style="color:#444">Días/sem</span><span style="color:#ccc;float:right">${dias}</span><br>
+      <span style="color:#444">Compromiso</span><span style="color:${semanasOk ? '#FF2A2A':'#555'};float:right">${semanas}</span><br>
+      <span style="color:#444">Inversión</span><span style="color:${investVal==='si'?'#FF2A2A':'#555'};float:right">${invest}</span>
+    `;
+  }
+
+  async function submitForm() {
+    const btn = document.getElementById('btnEnviar');
+    btn.disabled = true;
+    document.getElementById('sendingOverlay').classList.add('active');
+
+    const obj     = document.querySelector('[onclick*="objetivo"].selected');
+    const entrena = document.querySelector('[onclick*="entrena"].selected');
+    const invest  = investVal === 'si' ? 'Listo para invertir' : investVal === 'quizas' ? 'Depende del precio' : 'No por ahora';
+    const semanas = semanasOk === true ? 'Sí, comprometido' : semanasOk === false ? 'Necesita pensarlo' : 'Sin respuesta';
+
+    const payload = {
+      nombre:     document.getElementById('nombre').value,
+      email:      document.getElementById('email').value,
+      edad:       document.getElementById('edad').value,
+      medidas:    document.getElementById('medidas').value,
+      objetivo:   obj ? obj.innerText.replace(/^[\S\s]{1,3}\s/, '').trim() : '—',
+      obstaculo:  document.getElementById('obstaculo').value,
+      entrena:    entrena ? entrena.innerText : '—',
+      dias_semana: document.getElementById('dias').value,
+      compromiso_12_semanas: semanas,
+      inversion:  invest,
+      notas_extra: document.getElementById('extra').value,
+      _subject:   '🔥 Nueva aplicación de coaching — ' + (document.getElementById('nombre').value || 'Anónimo'),
+      _replyto:   document.getElementById('email').value,
+    };
+
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('sendingOverlay').classList.remove('active');
+
+      if (res.ok) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('successBlock').style.display = 'block';
+        document.getElementById('progress').style.width = '100%';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        btn.disabled = false;
+        alert('Hubo un error al enviar. Intenta de nuevo.');
+      }
+    } catch (e) {
+      document.getElementById('sendingOverlay').classList.remove('active');
+      btn.disabled = false;
+      alert('Error de conexión. Verifica tu internet e intenta de nuevo.');
+    }
+  }
+</script>
+</body>
+</html>
