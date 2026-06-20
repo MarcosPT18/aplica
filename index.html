@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplicación — Coaching Online | Marcos González</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D0D0D; font-family: 'Inter', sans-serif; color: #fff; min-height: 100vh; }
+    .wrap { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+    .progress-bar { height: 3px; background: #1a1a1a; position: sticky; top: 0; z-index: 10; }
+    .progress-fill { height: 100%; background: #FF2A2A; transition: width 0.4s ease; }
+    .hero { padding: 48px 24px 36px; text-align: center; border-bottom: 1px solid #1a1a1a; }
+    .badge { display: inline-block; background: #FF2A2A; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 2px; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 44px; line-height: 1.0; color: #fff; margin-bottom: 14px; }
+    .hero h1 span { color: #FF2A2A; }
+    .hero p { font-size: 14px; color: #777; line-height: 1.7; max-width: 320px; margin: 0 auto 24px; }
+    .stats { display: flex; justify-content: center; gap: 32px; }
+    .stat-n { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 28px; color: #FF2A2A; line-height: 1; }
+    .stat-l { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+    .fsec { padding: 0 24px; margin-top: 36px; }
+    .dots { display: flex; align-items: center; margin-bottom: 32px; justify-content: center; }
+    .dot { width: 30px; height: 30px; border-radius: 50%; background: #1a1a1a; border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #444; font-weight: 700; transition: all 0.3s; flex-shrink: 0; }
+    .dot.active { background: #FF2A2A; border-color: #FF2A2A; color: #fff; }
+    .dot.done { border-color: #FF2A2A; color: #FF2A2A; }
+    .dline { flex: 1; height: 1px; background: #1a1a1a; max-width: 48px; transition: background 0.3s; }
+    .dline.done { background: #FF2A2A; }
+    .step { display: none; animation: fi 0.3s ease; }
+    .step.active { display: block; }
+    @keyframes fi { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .stitle { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 26px; color: #fff; margin-bottom: 4px; }
+    .ssub { font-size: 13px; color: #444; margin-bottom: 24px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 10px; }
+    .field input, .field textarea, .field select { width: 100%; background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #fff; font-size: 15px; font-family: 'Inter', sans-serif; padding: 14px 16px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+    .field input:focus, .field textarea:focus { border-color: #FF2A2A; }
+    .field input::placeholder, .field textarea::placeholder { color: #2a2a2a; }
+    .field textarea { resize: none; min-height: 100px; line-height: 1.6; }
+    .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+    .field select option { background: #111; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .obtn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #777; font-size: 13px; font-family: 'Inter', sans-serif; padding: 14px 12px; text-align: left; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+    .obtn:hover { border-color: #333; color: #bbb; }
+    .obtn.sel { border-color: #FF2A2A; color: #fff; background: #180808; }
+    .oi { display: block; font-size: 20px; margin-bottom: 6px; }
+    .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ybtn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #555; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .ybtn:hover { border-color: #333; }
+    .ybtn.sel { border-color: #FF2A2A; background: #180808; color: #fff; }
+    .ybtn.no.sel { border-color: #333; background: #111; color: #888; }
+    .ivs { display: flex; flex-direction: column; gap: 10px; }
+    .ibtn { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; color: #666; font-size: 14px; font-family: 'Inter', sans-serif; padding: 16px 18px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+    .ibtn:hover { border-color: #333; }
+    .ibtn.sel { border-color: #FF2A2A; background: #180808; color: #fff; }
+    .itag { font-size: 10px; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; background: #1a1a1a; color: #333; flex-shrink: 0; }
+    .ibtn.sel .itag { background: #FF2A2A; color: #fff; }
+    .wbox { background: #180808; border: 1px solid #3a1010; border-radius: 4px; padding: 14px; font-size: 13px; color: #bb3333; line-height: 1.6; margin-top: 10px; display: none; }
+    .nav { display: flex; gap: 10px; margin-top: 32px; }
+    .bbtn { flex: 0 0 auto; background: transparent; border: 1px solid #1e1e1e; border-radius: 4px; color: #444; font-size: 14px; font-family: 'Inter', sans-serif; padding: 0 20px; height: 52px; cursor: pointer; transition: all 0.2s; }
+    .bbtn:hover { border-color: #333; color: #777; }
+    .nbtn { flex: 1; background: #FF2A2A; border: none; border-radius: 4px; color: #fff; font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif; height: 52px; cursor: pointer; transition: background 0.2s; }
+    .nbtn:hover { background: #dd2020; }
+    .nbtn:disabled { background: #3a1010; color: #7a3333; cursor: not-allowed; }
+    #resumen { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 18px; margin-bottom: 18px; font-size: 13px; color: #666; line-height: 2.4; }
+    .sblock { display: none; padding: 36px 24px 0; }
+    .stop { text-align: center; margin-bottom: 32px; }
+    .sicon { width: 64px; height: 64px; border-radius: 50%; background: #180808; border: 2px solid #FF2A2A; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 26px; }
+    .stop h2 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 32px; color: #fff; margin-bottom: 10px; }
+    .stop p { font-size: 14px; color: #555; line-height: 1.7; }
+    .ccard { background: #111; border: 1px solid #2a0808; border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+    .clabel { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #FF2A2A; font-weight: 700; margin-bottom: 10px; }
+    .ctitle { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 24px; color: #fff; margin-bottom: 8px; }
+    .cdesc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 18px; }
+    .cbullets { list-style: none; margin-bottom: 22px; }
+    .cbullets li { font-size: 13px; color: #666; padding: 6px 0; display: flex; gap: 10px; border-bottom: 1px solid #1a1a1a; }
+    .cbullets li:last-child { border-bottom: none; }
+    .cbullets li::before { content: '→'; color: #FF2A2A; font-weight: 700; flex-shrink: 0; }
+    .cbtn { display: block; width: 100%; background: #FF2A2A; border: none; border-radius: 4px; color: #fff; font-size: 16px; font-weight: 700; font-family: 'Inter', sans-serif; padding: 18px; text-align: center; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    .cbtn:hover { background: #dd2020; }
+    .csub { font-size: 11px; color: #444; text-align: center; margin-top: 10px; }
+    .nsteps { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 8px; padding: 20px; margin-top: 16px; }
+    .nstitle { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #333; margin-bottom: 16px; font-weight: 700; }
+    .nitem { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .nitem:last-child { margin-bottom: 0; }
+    .nbadge { width: 22px; height: 22px; border-radius: 50%; background: #1a1a1a; border: 1px solid #2a2a2a; color: #444; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .nbadge.done { border-color: #FF2A2A; color: #FF2A2A; }
+    .ntext strong { color: #888; display: block; font-size: 13px; margin-bottom: 2px; }
+    .ntext span { font-size: 12px; color: #444; }
+    .footer { text-align: center; padding: 40px 24px 0; font-size: 11px; color: #333; }
+    .footer a { color: #555; text-decoration: none; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(13,13,13,0.95); z-index: 100; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+    .overlay.on { display: flex; }
+    .spinner { width: 36px; height: 36px; border: 2px solid #1a1a1a; border-top-color: #FF2A2A; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .stext { font-size: 13px; color: #555; }
+  </style>
+</head>
+<body>
+<div class="overlay" id="overlay"><div class="spinner"></div><div class="stext">Enviando tu aplicación...</div></div>
+
+<div class="wrap">
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:20%"></div></div>
+
+  <div class="hero">
+    <div class="badge">Cupos limitados</div>
+    <h1>¿Listo para<br><span>transformarte?</span></h1>
+    <p>Este formulario es un filtro. Solo acepto clientes comprometidos de verdad con su proceso.</p>
+    <div class="stats">
+      <div><div class="stat-n">1:1</div><div class="stat-l">Coaching real</div></div>
+      <div><div class="stat-n">12+</div><div class="stat-l">Semanas</div></div>
+      <div><div class="stat-n">ISSA</div><div class="stat-l">Certificado</div></div>
+    </div>
+  </div>
+
+  <div class="fsec" id="fsec">
+    <div class="dots">
+      <div class="dot active" id="d1">1</div><div class="dline" id="l1"></div>
+      <div class="dot" id="d2">2</div><div class="dline" id="l2"></div>
+      <div class="dot" id="d3">3</div><div class="dline" id="l3"></div>
+      <div class="dot" id="d4">4</div><div class="dline" id="l4"></div>
+      <div class="dot" id="d5">5</div>
+    </div>
+
+    <div class="step active" id="s1">
+      <div class="stitle">Tu información</div>
+      <div class="ssub">Para hacerte seguimiento personalizado</div>
+      <div class="field"><label>Nombre completo</label><input type="text" id="nombre" placeholder="Tu nombre"></div>
+      <div class="field"><label>Correo electrónico</label><input type="email" id="email" placeholder="tu@email.com"></div>
+      <div class="field"><label>Edad</label><input type="number" id="edad" placeholder="Ej: 28"></div>
+      <div class="field"><label>Altura y peso actual</label><input type="text" id="medidas" placeholder="Ej: 5'9 — 185 lb"></div>
+      <div class="nav"><button class="nbtn" onclick="go(2)">Continuar →</button></div>
+    </div>
+
+    <div class="step" id="s2">
+      <div class="stitle">Tu objetivo</div>
+      <div class="ssub">¿Qué quieres lograr?</div>
+      <div class="field">
+        <div class="grid2">
+          <div class="obtn" onclick="pick(this,'obj')"><span class="oi">🔥</span>Perder grasa y definirme</div>
+          <div class="obtn" onclick="pick(this,'obj')"><span class="oi">💪</span>Ganar músculo y volumen</div>
+          <div class="obtn" onclick="pick(this,'obj')"><span class="oi">⚖️</span>Recomposición corporal</div>
+          <div class="obtn" onclick="pick(this,'obj')"><span class="oi">🏋️</span>Mejorar rendimiento</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:16px"><label>¿Qué te ha impedido lograrlo?</label><textarea id="obs" placeholder="Sé honesto — esto me ayuda a entender cómo puedo ayudarte"></textarea></div>
+      <div class="nav"><button class="bbtn" onclick="go(1)">←</button><button class="nbtn" onclick="go(3)">Continuar →</button></div>
+    </div>
+
+    <div class="step" id="s3">
+      <div class="stitle">Tu situación actual</div>
+      <div class="ssub">Necesito saber desde dónde empezamos</div>
+      <div class="field"><label>¿Entrenas actualmente?</label>
+        <div class="grid2">
+          <div class="obtn" onclick="pick(this,'ent')">Sí, con consistencia</div>
+          <div class="obtn" onclick="pick(this,'ent')">A veces, inconsistente</div>
+          <div class="obtn" onclick="pick(this,'ent')">Entrené antes, paré</div>
+          <div class="obtn" onclick="pick(this,'ent')">Nunca he entrenado</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:16px"><label>¿Cuántos días por semana puedes entrenar?</label>
+        <select id="dias"><option value="" disabled selected>Selecciona...</option><option>2 días</option><option>3 días</option><option>4 días</option><option>5 días</option><option>6 días</option></select>
+      </div>
+      <div class="nav"><button class="bbtn" onclick="go(2)">←</button><button class="nbtn" onclick="go(4)">Continuar →</button></div>
+    </div>
+
+    <div class="step" id="s4">
+      <div class="stitle">Compromiso</div>
+      <div class="ssub">Solo trabajo con personas serias</div>
+      <div class="field"><label>¿Listo para seguir un plan 12+ semanas?</label>
+        <div class="yn">
+          <div class="ybtn" onclick="pickYN(this,true)">Sí, comprometido</div>
+          <div class="ybtn no" onclick="pickYN(this,false)">Necesito pensarlo</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:20px"><label>¿Puedes invertir en tu proceso mensualmente?</label>
+        <div class="ivs">
+          <div class="ibtn" onclick="pickInv(this,'si')"><span>Sí, estoy listo para invertir</span><span class="itag">✓</span></div>
+          <div class="ibtn" onclick="pickInv(this,'quizas')"><span>Depende del precio exacto</span><span class="itag">?</span></div>
+          <div class="ibtn" onclick="pickInv(this,'no')"><span>Ahora mismo no puedo</span><span class="itag">✕</span></div>
+        </div>
+        <div class="wbox" id="wbox">Mis programas requieren una inversión mensual. Si esto cambia, te contacto. 🙏</div>
+      </div>
+      <div class="nav"><button class="bbtn" onclick="go(3)">←</button><button class="nbtn" onclick="go(5)">Ver resumen →</button></div>
+    </div>
+
+    <div class="step" id="s5">
+      <div class="stitle">Confirma tu aplicación</div>
+      <div class="ssub">Revisa todo antes de enviar</div>
+      <div id="resumen"></div>
+      <div class="field"><label>¿Algo más que quieras que sepa?</label><textarea id="extra" placeholder="Opcional"></textarea></div>
+      <div class="nav"><button class="bbtn" onclick="go(4)">←</button><button class="nbtn" id="btnEnv" onclick="enviar()">Enviar aplicación ✓</button></div>
+    </div>
+  </div>
+
+  <div class="sblock" id="sblock">
+    <div class="stop"><div class="sicon">✓</div><h2>Aplicación recibida</h2><p>Tu perfil está en mis manos.<br>Si eres un buen fit, te contacto en 24–48h por Instagram.</p></div>
+    <div class="ccard">
+      <div class="clabel">Paso siguiente — recomendado</div>
+      <div class="ctitle">Agenda tu Discovery Call ahora</div>
+      <div class="cdesc">No esperes a que te contacte. Los cupos se llenan rápido.</div>
+      <ul class="cbullets">
+        <li>30 minutos, sin costo</li>
+        <li>Evaluamos tu situación actual juntos</li>
+        <li>Te digo si puedo ayudarte — sin rodeos</li>
+        <li>Si es el fit correcto, arrancamos esa semana</li>
+      </ul>
+      <a class="cbtn" href="https://calendly.com/kingkayzer01/30min" target="_blank">Agendar Discovery Call →</a>
+      <div class="csub">Zoom · 30 min · Gratis</div>
+    </div>
+    <div class="nsteps">
+      <div class="nstitle">Qué pasa después</div>
+      <div class="nitem"><div class="nbadge done">✓</div><div class="ntext"><strong>Aplicación enviada</strong><span>Ya está en mis manos.</span></div></div>
+      <div class="nitem"><div class="nbadge">2</div><div class="ntext"><strong>Reviso tu perfil</strong><span>En las próximas 24–48 horas.</span></div></div>
+      <div class="nitem"><div class="nbadge">3</div><div class="ntext"><strong>Discovery Call</strong><span>30 min para diseñar tu plan.</span></div></div>
+      <div class="nitem"><div class="nbadge">4</div><div class="ntext"><strong>Arrancamos</strong><span>Plan listo, proceso activo.</span></div></div>
+    </div>
+    <div class="footer"><p>@marcosglezpt · ISSA Certified Personal Trainer & Nutrition Coach<br><a href="https://www.instagram.com/marcosglezpt" target="_blank">Instagram</a> · <a href="https://calendly.com/kingkayzer01/30min" target="_blank">Calendly</a></p></div>
+  </div>
+</div>
+
+<script>
+  var inv = '', syn = null;
+
+  function go(n) {
+    document.querySelectorAll('.step').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('s'+n).classList.add('active');
+    document.getElementById('prog').style.width = (n*20)+'%';
+    for(var i=1;i<=5;i++){
+      var d=document.getElementById('d'+i);
+      if(i<n){d.className='dot done';d.textContent='✓';}
+      else if(i===n){d.className='dot active';d.textContent=i;}
+      else{d.className='dot';d.textContent=i;}
+      if(i<5)document.getElementById('l'+i).className='dline'+(i<n?' done':'');
+    }
+    if(n===5) resumen();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function pick(el, g) {
+    el.closest('.field').querySelectorAll('.obtn').forEach(function(b){b.classList.remove('sel');});
+    el.classList.add('sel');
+  }
+
+  function pickYN(el, v) {
+    el.closest('.field').querySelectorAll('.ybtn').forEach(function(b){b.classList.remove('sel');});
+    el.classList.add('sel');
+    syn = v;
+  }
+
+  function pickInv(el, v) {
+    document.querySelectorAll('.ibtn').forEach(function(b){b.classList.remove('sel');});
+    el.classList.add('sel');
+    inv = v;
+    document.getElementById('wbox').style.display = v==='no'?'block':'none';
+  }
+
+  function resumen() {
+    var n=document.getElementById('nombre').value||'—';
+    var e=document.getElementById('email').value||'—';
+    var ed=document.getElementById('edad').value||'—';
+    var m=document.getElementById('medidas').value||'—';
+    var o=document.querySelector('[onclick*="obj"].sel');
+    var en=document.querySelector('[onclick*="ent"].sel');
+    var d=document.getElementById('dias').value||'—';
+    var iv=inv==='si'?'✓ Listo':inv==='quizas'?'Depende del precio':'✕ No por ahora';
+    var sv=syn===true?'✓ Comprometido':syn===false?'Necesita pensarlo':'—';
+    var ot=o?o.innerText.replace(/^\S+\s*/,'').trim():'—';
+    document.getElementById('resumen').innerHTML=
+      '<span style="color:#444">Nombre</span><span style="color:#ccc;float:right">'+n+'</span><br>'+
+      '<span style="color:#444">Email</span><span style="color:#ccc;float:right">'+e+'</span><br>'+
+      '<span style="color:#444">Edad</span><span style="color:#ccc;float:right">'+ed+' años</span><br>'+
+      '<span style="color:#444">Medidas</span><span style="color:#ccc;float:right">'+m+'</span><br>'+
+      '<span style="color:#444">Objetivo</span><span style="color:#ccc;float:right">'+ot+'</span><br>'+
+      '<span style="color:#444">Entrena</span><span style="color:#ccc;float:right">'+(en?en.innerText:'—')+'</span><br>'+
+      '<span style="color:#444">Días/sem</span><span style="color:#ccc;float:right">'+d+'</span><br>'+
+      '<span style="color:#444">Compromiso</span><span style="color:'+(syn?'#FF2A2A':'#555')+';float:right">'+sv+'</span><br>'+
+      '<span style="color:#444">Inversión</span><span style="color:'+(inv==='si'?'#FF2A2A':'#555')+';float:right">'+iv+'</span>';
+  }
+
+  function enviar() {
+    var btn = document.getElementById('btnEnv');
+    btn.disabled = true;
+    document.getElementById('overlay').classList.add('on');
+
+    var o=document.querySelector('[onclick*="obj"].sel');
+    var en=document.querySelector('[onclick*="ent"].sel');
+    var iv=inv==='si'?'Listo para invertir':inv==='quizas'?'Depende del precio':'No por ahora';
+    var sv=syn===true?'Si comprometido':syn===false?'Necesita pensarlo':'Sin respuesta';
+
+    var fd = new FormData();
+    fd.append('nombre', document.getElementById('nombre').value);
+    fd.append('email', document.getElementById('email').value);
+    fd.append('edad', document.getElementById('edad').value);
+    fd.append('medidas', document.getElementById('medidas').value);
+    fd.append('objetivo', o?o.innerText.replace(/^\S+\s*/,'').trim():'-');
+    fd.append('obstaculo', document.getElementById('obs').value);
+    fd.append('entrena', en?en.innerText:'-');
+    fd.append('dias_semana', document.getElementById('dias').value);
+    fd.append('compromiso', sv);
+    fd.append('inversion', iv);
+    fd.append('notas_extra', document.getElementById('extra').value);
+    fd.append('_subject', 'Nueva aplicacion coaching - ' + document.getElementById('nombre').value);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://formspree.io/f/xwvjzdnz');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.onload = function() {
+      document.getElementById('overlay').classList.remove('on');
+      if(xhr.status === 200 || xhr.status === 201) {
+        document.getElementById('fsec').style.display = 'none';
+        document.getElementById('sblock').style.display = 'block';
+        document.getElementById('prog').style.width = '100%';
+        window.scrollTo({top:0,behavior:'smooth'});
+      } else {
+        btn.disabled = false;
+        alert('Error al enviar. Intenta de nuevo.');
+      }
+    };
+    xhr.onerror = function() {
+      document.getElementById('overlay').classList.remove('on');
+      btn.disabled = false;
+      alert('Error de conexion. Verifica tu internet.');
+    };
+    xhr.send(fd);
+  }
+</script>
+</body>
+</html>
